@@ -60,7 +60,7 @@ ipc.on('command', function(event, cmd) {
     case 'version':
       exec('drupal --version', function(code, stdout, stderr) {
         if (!stderr) {
-          event.sender.send('output', stdout);
+          event.sender.send('version', stdout);
         }
         else {
           // @todo error handling globally nicely with the client
