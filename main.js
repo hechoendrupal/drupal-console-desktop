@@ -80,8 +80,4 @@ ipc.on('command', function(event, cmd) {
     default:
 
   }
-  if (cmd == 'version') {
-
-  }
 });
-
