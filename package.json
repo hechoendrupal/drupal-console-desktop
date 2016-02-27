@@ -22,9 +22,7 @@
   },
   "homepage": "https://github.com/willwh/dcapp#readme",
   "devDependencies": {
-    "electron-prebuilt": "^0.36.0"
-  },
-  "dependencies": {
+    "electron-prebuilt": "^0.36.0",
     "shelljs": "^0.6.0"
   }
 }

@@ -1,5 +1,5 @@
 'use strict';
-require('shelljs/global');
+const shell = require('shelljs');
 const electron = require('electron');
 // Module to control application life.
 const app = electron.app;
@@ -13,15 +13,9 @@ let mainWindow;
 function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({width: 800, height: 600});
-  if (!which('drupal')) {
-    mainWindow.loadURL('https://drupalconsole.com');
-  }
-  else {
-    // load the index.html of the app.
-    mainWindow.loadURL('file://' + __dirname + '/index.html');
-    mainWindow.webContents.openDevTools();
-
-  }
+  mainWindow.loadURL('file://' + __dirname + '/index.html');
+  mainWindow.webContents.openDevTools();
+  console.log('created window');
 
 
   // Emitted when the window is closed.
@@ -58,9 +52,9 @@ var ipc = require("electron").ipcMain;
 ipc.on('command', function(event, cmd) {
   switch(cmd) {
     case 'version':
-      exec('drupal --version', function(code, stdout, stderr) {
+      shell.exec('drupal --version', function(code, stdout, stderr) {
         if (!stderr) {
-          event.sender.send('version', stdout);
+          mainWindow.send('version', stdout);
         }
         else {
           // @todo error handling globally nicely with the client
@@ -68,7 +62,7 @@ ipc.on('command', function(event, cmd) {
       });
       break;
     case 'generate':
-      exec('drupal generate:module', function(code, stdout, stderr) {
+      shell.exec('drupal generate:module', function(code, stdout, stderr) {
         if (!stderr) {
           event.sender.send('output', stdout);
         }

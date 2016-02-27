@@ -1,4 +1,4 @@
-var ipc = require("electron").ipcRenderer;
+var ipc = require('electron').ipcRenderer;
 
 $(document).ready(function() {
   ipc.send('command', 'version');
