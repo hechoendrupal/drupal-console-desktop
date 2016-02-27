@@ -1,6 +1,8 @@
 'use strict';
 const shell = require('shelljs');
 const electron = require('electron');
+const ipc = require("electron").ipcMain;
+
 // Module to control application life.
 const app = electron.app;
 // Module to create native browser window.
@@ -16,7 +18,7 @@ function createWindow () {
   mainWindow.loadURL('file://' + __dirname + '/index.html');
   mainWindow.webContents.openDevTools();
   console.log('created window');
-
+  mainWindow.send('debug', process.env.PATH);
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {
@@ -48,13 +50,12 @@ app.on('activate', function () {
   }
 });
 
-var ipc = require("electron").ipcMain;
 ipc.on('command', function(event, cmd) {
   switch(cmd) {
     case 'version':
       shell.exec('drupal --version', function(code, stdout, stderr) {
         if (!stderr) {
-          mainWindow.send('version', stdout);
+          event.sender.send('version', stdout);
         }
         else {
           // @todo error handling globally nicely with the client

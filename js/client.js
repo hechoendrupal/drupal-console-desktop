@@ -1,4 +1,4 @@
-var ipc = require('electron').ipcRenderer;
+const ipc = require('electron').ipcRenderer;
 
 $(document).ready(function() {
   ipc.send('command', 'version');
@@ -6,6 +6,9 @@ $(document).ready(function() {
     // Append to the #version div in index.html
     $('#version').append(data + '<br />');
     notify(data);
+  });
+  ipc.on('debug', function (event, data) {
+    console.log(data);
   });
 });
 
