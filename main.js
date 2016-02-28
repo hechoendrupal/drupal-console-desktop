@@ -17,8 +17,6 @@ function createWindow () {
   mainWindow = new BrowserWindow({width: 800, height: 600});
   mainWindow.loadURL('file://' + __dirname + '/index.html');
   mainWindow.webContents.openDevTools();
-  console.log('created window');
-  mainWindow.send('debug', process.env.PATH);
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {
@@ -73,6 +71,9 @@ ipc.on('command', function(event, cmd) {
       });
       break;
     default:
-
   }
+});
+
+ipc.on('debug', function(event, data) {
+  event.sender.send('debug', data);
 });
