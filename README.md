@@ -8,11 +8,12 @@ To clone and run this repository you'll need [Git](https://git-scm.com) and [Nod
 
 ```bash
 # Clone this repository
-git clone https://github.com/willwh/dcapp
+git clone https://github.com/hechoendrupal/dcapp
 # Go into the repository
 cd dcapp
 # Install dependencies and run the app
-npm install && npm start
+npm install
+npm start
 ```
 
 ## Tools
