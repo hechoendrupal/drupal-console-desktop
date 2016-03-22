@@ -8,7 +8,7 @@ To clone and run this repository you'll need [Git](https://git-scm.com) and [Nod
 
 ```bash
 # Clone this repository
-git clone https://github.com/hechoendrupal/dcapp
+git clone https://github.com/hechoendrupal/drupal-console-desktop
 # Go into the repository
 cd dcapp
 # Install dependencies and run the app
