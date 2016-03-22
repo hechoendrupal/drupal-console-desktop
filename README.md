@@ -2,6 +2,8 @@
 
 A cross platform UI for [Drupal Console](https://drupalconsole.com/)
 
+Originally started by William Hetherington [@willwh](https://github.com/willwh)
+
 ## To Use
 
 To clone and run this repository you'll need [Git](https://git-scm.com) and [Node.js](https://nodejs.org/en/download/) (which comes with [npm](http://npmjs.com)) installed on your computer. 
@@ -28,6 +30,6 @@ Learn more about Electron and its API in the [documentation](http://electron.ato
 
 ## Chat
 
-Come and chat with us in [Gitter.im](https://github.com/hechoendrupal/DrupalConsole)
+Come and chat with us in [Gitter.im](https://gitter.im/hechoendrupal/DrupalConsole)
 
 #### License [CC0 (Public Domain)](LICENSE.md)
