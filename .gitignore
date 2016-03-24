@@ -2,3 +2,4 @@ node_modules
 dcapp-darwin-x64
 dcapp-linux-x64
 dcapp-win32-x64
+config.js

@@ -1,7 +1,11 @@
 'use strict';
 const shell = require('shelljs');
 const electron = require('electron');
-const ipc = require("electron").ipcMain;
+const ipc = require('electron').ipcMain;
+const dialog = require('electron').dialog;
+const storage = require('electron-json-storage');
+const path = require('path');
+var sites;
 
 // Module to control application life.
 const app = electron.app;
@@ -17,7 +21,7 @@ function createWindow () {
   mainWindow = new BrowserWindow({width: 800, height: 600});
   mainWindow.loadURL('file://' + __dirname + '/index.html');
   mainWindow.webContents.openDevTools();
-
+  mainWindow.webContents.send('init');
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {
     // Dereference the window object, usually you would store windows
@@ -49,16 +53,12 @@ app.on('activate', function () {
 });
 
 ipc.on('command', function(event, cmd) {
-  switch(cmd) {
-    case 'version':
-      shell.exec('drupal --version', function(code, stdout, stderr) {
-        if (!stderr) {
-          event.sender.send('version', stdout);
-        }
-        else {
-          // @todo error handling globally nicely with the client
-        }
-      });
+  var command = JSON.parse(cmd);
+  switch(command.cmd) {
+    case 'clear':
+      storage.set('sites', [], function(error) {
+        if (error) throw error;
+      })
       break;
     case 'generate':
       shell.exec('drupal generate:module', function(code, stdout, stderr) {
@@ -70,10 +70,81 @@ ipc.on('command', function(event, cmd) {
         }
       });
       break;
+    case 'status':
+      console.log('weee');
+      event.sender.send('loading');
+      consoleExec(command.path, 'drupal ss', function (data) {
+          event.sender.send('debug', data);
+          event.sender.send('done-loading');
+      });
+    case 'version':
+      shell.exec('drupal --version', function(code, stdout, stderr) {
+        if (!stderr) {
+          event.sender.send('version', stdout);
+        }
+        else {
+          // @todo error handling globally nicely with the client
+        }
+      });
+      break;
+
     default:
   }
 });
 
-ipc.on('debug', function(event, data) {
-  event.sender.send('debug', data);
+ipc.on('addSite', function(event, data) {
+  // First fetch the current sites array
+  storage.get('sites', function(error, sites) {
+      if (error) {
+        console.log(error);
+      }
+      if (sites.length >= 1) {
+        dialog.showOpenDialog({ properties: [ 'openDirectory']}, function(data) {
+          if (data) {
+            var site = { 'url': 'localhost', 'path': data[0]};
+            sites.push(site);
+            storage.set('sites', sites, function(error) {
+              if (error) throw error;
+              event.sender.send('addSite', site);
+            })
+          }
+        });
+      }
+      else {
+          dialog.showOpenDialog({ properties: [ 'openDirectory']}, function(data) {
+            if (data) {
+             var sites = [{ 'url': 'localhost', 'path': data[0]}];
+              storage.set('sites', sites, function(error) {
+                if (error) throw error;
+              })
+              console.log(sites[0]);
+              event.sender.send('addSite', sites[0]);
+            }
+          });
+        }
+  })
+  //@todo We need to use Drupal Console to get the site URL from the path they choose
 });
+
+// Init dcapp
+ipc.on('init', function(event, data) {
+  storage.get('sites', function(error, sites) {
+      if (error) {
+        console.log(error);
+      }
+      if (sites.length >= 1) {
+        event.sender.send('init', sites);
+      }
+  })
+});
+
+function consoleExec(cwd, cmd, cb) {
+  shell.exec(cmd, {cwd: cwd}, function(code, stdout, stderr) {
+    if (!stderr) {
+      cb(stdout);
+    }
+    else {
+      // @todo error handling globally nicely with the client
+    }
+  });
+}

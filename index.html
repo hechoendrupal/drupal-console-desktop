@@ -3,12 +3,23 @@
   <head>
     <meta charset="UTF-8">
     <title>Drupal Console</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
   </head>
   <body>
-    <div id="version">
-      <div id="console-log">
+      <div class="header">
       </div>
-    </div>
+      <div class="content">
+        <button id="btnAddSite">Add Site</button>
+        <button id="btnClearSites">Clear Sites</button>
+        <ul class="sites"></ul>
+      </div>
+      <div class="commands">
+        <button id="cmdStatus">Status</button>
+      </div>
+      <div class="console-log"></div>
+      <div id="overlay" style="visibility: hidden;">
+        <p id="loading">Doing your bidding...</p>
+      </div>
         <script>window.$ = window.jQuery = require('./js/jquery-2.2.1.min.js');</script>
         <script src="js/client.js"></script>
   </body>
